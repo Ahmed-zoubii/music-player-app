@@ -1,5 +1,5 @@
 # Music Player App
-
+ 
 A fully functional Music Player web application built with Django. This project allows users to browse, play, and favorite songs. It includes user authentication, a customizable sign-up form, and a seamless interface for managing and listening to music.
 
 ## Features
