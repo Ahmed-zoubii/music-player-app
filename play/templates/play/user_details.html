@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{user}} Profile</title>
+</head>
+<body>
+    {% if not songs %}
+        {% if profile_owner %}
+        <h1>Welcome {{ user }}</h1>
+        <p>You don't have any favorite songs.</p>
+        <h3>Music you can add to favorites:</h3>
+            {% for song in available_songs %}
+                <p>Song title: {{ song.title }}</p>
+                <audio controls> <source src="{% static song.path_to_file %}" type="audio/mpeg"></audio>
+
+            {% endfor %}
+        {% else %}
+        <h1>Welcome to {{ user }} profile</h1>
+        <h4>{{user}} does not have any favorite songs.</h4>
+        {% endif %}
+    {% else %}
+        <h1>Favorite songs for {{ user }}:</h1>
+        {% for song in songs %}
+            <p>{{song.title}}</p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

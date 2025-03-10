@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Song List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        h1, h2, h4 {
+            color: #2c3e50;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        audio {
+            display: block;
+            margin: 10px auto;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: white;
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+        }
+        a {
+            text-decoration: none;
+            color: #3498db;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello</h1>
+
+    {% if not user.is_authenticated %}
+        <p>Do you want to log in?</p>
+        <a href="{% url 'account_login' %}"><button type="submit">Login</button></a>
+    {% endif %}
+
+    <h2>Song List</h2>
+
+    {% if user.is_authenticated %}
+        <h4>Welcome, {{ user }}</h4>
+        {% if not favorite_songs_count %}
+            <p>You don't have any favorite songs.</p>
+        {% endif %}
+
+        {% if favorite_songs %}
+            <b>Your favorite songs:</b>
+            {% for song in favorite_songs %}
+                <p>Song title: {{ song.title }}</p>
+                <audio controls>
+                    <source src="{% static song.path_to_file %}" type="audio/mpeg">
+                </audio>
+            {% endfor %}
+        {% endif %}
+
+        {% if available_songs %}
+            <b>Music you can add to favorites:</b>
+            {% for song in available_songs %}
+                <p>Song title: {{ song.title }}</p>
+                <audio controls>
+                    <source src="{% static song.path_to_file %}" type="audio/mpeg">
+                </audio>
+                <form method="post" action="{% url 'song-list' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="song_id" value="{{ song.id }}">
+                    <button type="submit">Add to favorites</button>
+                </form>
+            {% endfor %}
+        {% else %}
+        <h2>No music available</h2>
+        {% endif %}
+    {% else %}
+        <b>Available Songs:</b>
+        <ul>
+            {% for song in songs %}
+                <li>
+                    <p></p><a href="{% url 'song-detail' pk=song.id %}">{{ song.title }}</a></p>
+                    <br>Artist: {{ song.artist }}
+                    <br>
+                    <audio controls>
+                        <source src="{% static song.path_to_file %}" type="audio/mpeg">
+                    </audio>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            <p>Do you want to log out?</p>
+            <button type="submit">Logout</button>
+        </form>
+    {% endif %}
+</body>
+</html>

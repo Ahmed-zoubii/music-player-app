@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Playback {{ song.title }}</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        text-align: center;
+        padding: 20px;
+    }
+    h2, h3 {
+        color: #2c3e50;
+    }
+    audio {
+        display: block;
+        margin: 20px auto;
+    }
+    p {
+        font-size: 18px;
+    }
+    .favorite-users {
+        background: white;
+        padding: 15px;
+        margin: 20px auto;
+        width: 50%;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+    <h2>Song title: {{ song.title }}</h2>
+    <audio controls>
+        <source src="{% static song.path_to_file %}" type="audio/mpeg">
+    </audio>
+    {% if favorite_by %}
+        <div class="favorite-users">
+            <p><strong>Favorited by:</strong></p>
+            {% for user in favorite_by %}
+                <p>{{ user }}</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h3>No user likes this music</h3>
+    {% endif %}
+</body>
+</html>
